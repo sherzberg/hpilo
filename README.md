@@ -5,5 +5,6 @@ RIBCL is an XML scripting language for interacting with HP Proliant Servers at t
 # GOAL
 * to translate some of the functions available in RIBCL XML to GOLANG. 
 * primarily to interact with hardware for bare metal provisioning from custom ISO.  
-# References
+
+# References   
 Much in the same vein as the work of SEVEAS and his hpilo.py python scripts. I started by using his python scripts to interact with the gear and get an understanding of what was happening in the background. 
