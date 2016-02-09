@@ -8,7 +8,8 @@ RIBCL is an XML scripting language for interacting with HP Proliant Servers at t
 [ ] EjectVirtualMedia
 [ ] Power Off/On hardware
 [ ] SetVirtualMedia Boot status
-[ ] GetRackInfo
+[ ] GetRackInfo  
+
 # Phase 2
 * to take the translated functions and create a connection interface in order to connect to the hardware and interact with it
 [ ] All of this currently outputs to terminal rather than connecting to the hardware and sending the info across. 
