@@ -1,4 +1,5 @@
-//SetVirtualMediaStatus.go
+//ResetServer.go
+// the RESET_SERVER command will force a warm reboot of the server if the server is currently on.
 package main
 import (
   "encoding/xml"
@@ -18,25 +19,15 @@ type Login struct {
 //RibInfo
 type Info struct {
   Mode string `xml:"MODE,attr"`
-  SetVMStatus SVMS `xml:"SET_VIRTUAL_MEDIA"`
+  ResetServer RS `xml:"RESET_SERVER"`
 }
-//SetVirtuaMediaStatus
-type SVMS struct {
-  Device string `xml:"DEVICE,attr"`
-  VmBootOption VMBO `xml:"VM_BOOT_OPTION"`
-  VmWriteProtect VMWP `xml:"VM_WRITE_PROTECT"`
-}
-//VirtualMediaBootOption
-type VMBO struct {
-  Value string `xml:"value,attr"`
-}
-//VirtualMediaWriteProtect
-type VMWP struct {
-  Value string `xml:"value,attr"`
+//ResetServer
+type RS struct {
+  RESET_SERVER string `xml:"RESET_SERVER"`
 }
 func main() {
   v := &RibCl{Version: "2.0"}
-  v.RibLogin = append(v.RibLogin, Login{"Administrator", "password123", Info{"write", SVMS{"CDROM", VMBO{"BOOT_ONCE"}, VMWP{"Y"}}}})
+  v.RibLogin = append(v.RibLogin, Login{"Administrator", "password123", Info{"write", RS{""}}})
   output, err := xml.MarshalIndent(v,"  ","    ")
   if err != nil {
     fmt.Printf("error: %v\n", err)

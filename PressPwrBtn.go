@@ -1,4 +1,5 @@
-//SetVirtualMediaStatus.go
+//PressPwrBtn.go
+// This PRESS_PWR_BTN command is used to simulate a physical press of the server power button.
 package main
 import (
   "encoding/xml"
@@ -18,25 +19,15 @@ type Login struct {
 //RibInfo
 type Info struct {
   Mode string `xml:"MODE,attr"`
-  SetVMStatus SVMS `xml:"SET_VIRTUAL_MEDIA"`
+  PressPwrBtn PPB `xml:"PRESS_PWR_BTN"`
 }
-//SetVirtuaMediaStatus
-type SVMS struct {
-  Device string `xml:"DEVICE,attr"`
-  VmBootOption VMBO `xml:"VM_BOOT_OPTION"`
-  VmWriteProtect VMWP `xml:"VM_WRITE_PROTECT"`
-}
-//VirtualMediaBootOption
-type VMBO struct {
-  Value string `xml:"value,attr"`
-}
-//VirtualMediaWriteProtect
-type VMWP struct {
-  Value string `xml:"value,attr"`
+//PressPowerButton
+type PPB struct {
+  value string `xml:"PRESS_PWR_BTN"`
 }
 func main() {
   v := &RibCl{Version: "2.0"}
-  v.RibLogin = append(v.RibLogin, Login{"Administrator", "password123", Info{"write", SVMS{"CDROM", VMBO{"BOOT_ONCE"}, VMWP{"Y"}}}})
+  v.RibLogin = append(v.RibLogin, Login{"Administrator", "password123", Info{"write", PPB{""}}})
   output, err := xml.MarshalIndent(v,"  ","    ")
   if err != nil {
     fmt.Printf("error: %v\n", err)
