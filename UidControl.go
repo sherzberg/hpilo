@@ -23,7 +23,7 @@ type Info struct {
 }
 //UIDControl
 type UIDC struct {
-  value string `xml:"UID_CONTROL"`
+  UID string `xml:"UID,attr"`
 }
 func main() {
   v := &RibCl{Version: "2.0"}
