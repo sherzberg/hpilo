@@ -1,0 +1,5 @@
+<RIBCL VERSION="2.0"><LOGIN USER_LOGIN="Administrator" PASSWORD="password"><RIB_INFO MODE="read">
+<GET_FW_VERSION/>
+</RIB_INFO>
+</LOGIN>
+</RIBCL>
