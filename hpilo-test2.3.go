@@ -37,48 +37,49 @@ type UIDC struct {
 }
 
 func main() {
-	URL := "https://ilomxq5420b9c:443"
-	fmt.Println("Connecting to URL:>", URL)
+	log.SetFlags(log.Lshortfile)
 
 	v := &RibCl{Version: "2.0"}
 	v.RibLogin = append(v.RibLogin, Login{"Administrator", "password", Info{"write", UIDC{"True"}}})
-	// login_ribcl, err := xml.MarshalIndent(v, "  ", "    ")
-	log.SetFlags(log.Lshortfile)
+	login_ribcl, err := xml.MarshalIndent(v, "", "    ")
+
 	conf := &tls.Config{
 		InsecureSkipVerify: true,
 	}
 
+	URL := "ilomxq5420b9c:443"
 	fmt.Println("Connecting to URL:>", URL)
-	conn, err := tls.Dial("tcp", "ilomxq5420b9c:443", conf)
+	conn, err := tls.Dial("tcp", URL, conf)
+	defer conn.Close()
 	if err != nil {
-		log.Println(err)
 		log.Fatalf("client: dial: %s", err)
 		return
 	}
-	defer conn.Close()
+
 	log.Println("client: connected to: ", conn.RemoteAddr())
-	//	state := conn.ConnectionState()
 
-	n, err := conn.Write([]byte("POST /ribcl HTTP/1.1\r\nHost: localhost\r\nContent-Length: 52\r\nConnection: Close\r\n\r\n"))
-	n, err = conn.Write([]byte("<?xml version=\"1.0\"?>\r\n"))
-	file, _ := ioutil.ReadFile("example.xml")
-	n, err = conn.Write(file)
-	// n, err = conn.Write(login_ribcl)
-	if err != nil {
-		log.Println(err)
-		return
+	HTTP_HEADER := "POST /ribcl HTTP/1.1\r\nHost: localhost\r\nContent-Length: %d\r\nConnection: Close\r\n\r\n"
+	xml_header := "<?xml version=\"1.0\"?>\r\n"
+	msg_length := len(string(login_ribcl) + xml_header)
+
+	msg := fmt.Sprintf(HTTP_HEADER, msg_length)
+
+	log.Printf("headers: %s", msg)
+	log.Printf("headers: %s", msg)
+
+	body := []string{fmt.Sprintf(HTTP_HEADER, msg_length), xml_header, string(login_ribcl)}
+
+	for _, data := range body {
+		_, err := conn.Write([]byte(data))
+		if err != nil {
+			log.Panic(err)
+		}
+		log.Printf("client: write: %#v", data)
 	}
-	log.Printf("client: write: %s", err)
-	reply := make([]byte, 1024)
-	n, err = conn.Read(reply)
-	log.Printf("client: read %q (%d bytes)", string(reply[:n]), n)
-	log.Print("client: exiting")
 
-	reply = make([]byte, 1024)
-	n, err = conn.Read(reply)
-	log.Printf("client: read %q (%d bytes)", string(reply[:n]), n)
-
-	reply = make([]byte, 1024)
-	n, err = conn.Read(reply)
-	log.Printf("client: read %q (%d bytes)", string(reply[:n]), n)
+	response_body, err := ioutil.ReadAll(conn)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("client response: %s", response_body)
 }
